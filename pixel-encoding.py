@@ -13,26 +13,53 @@ def decode(input,output):
     im.close()
     f=open(output,"wb")
     for i in ar:
-        f.write(b''+chr(i))
+        f.write(b''+chr(i[0]))
     f.close()
     print "Done."
 
-def use_help():
+# Todo: offset x,y OPTIMIZE FOR BIG FILES
+# lenght, direction    
+def encode(input,output):
+    """encode message"""
+    f=open(input,"rb")
+    ar=[]
+    size=0
+    for row in f:
+        for char in row:
+            ar.append(ord(char))
+            size+=1
+    x=size/2
+    y=x
+    f.close()
+    im=Image.new("RGB",(x,y),"white")
+    for i in xrange(y):
+        for j in xrange(x):
+            if i*(x)+(j)>size-1:
+                continue
+            im.putpixel((j,i),(ar[i*(x)+(j)],0,0))
+    im.save(output, format='BMP')
+    print("Done")
+            
+# Todo: Beautify
+def usage():
     print "[*] pixel-encoding 'mode' input output "
     print "[*] Specifi mode encode -e(Not implemented) or decode -d "
-    
+
+# Todo: Validations, execption optimization
 def main():
     input=""
     output=""
     mode=""
     if len(argv)!=4:
-        use_help()
+        usage()
     else:
         input=argv[2]
         output=argv[3]
         mode=argv[1]
     if mode == "-d":
         decode(input,output)
+    elif mode=="-e":
+        encode(input,output)
     else:
         print "No implementado."
  
